@@ -17,7 +17,7 @@ class Solution : Solver {
 
     public object PartTwo(string input) {
         var left = GetColumn(input, 0);
-        var rightMap = GetColumn(input, 1).GroupBy(x => x).ToDictionary(x => x.Key, x=> x.Count());
+        var rightMap = GetColumn(input, 1).CountBy(x => x).ToDictionary();
 
         var similarityScore = left.Sum(x=> rightMap.TryGetValue(x, out var result) ? x * result : 0);
 
