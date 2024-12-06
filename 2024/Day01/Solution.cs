@@ -16,13 +16,22 @@ class Solution : Solver {
             .Sum();
 
     public object PartTwo(string input) {
-        return 0;
+        var left = GetColumn(input, 0);
+        var rightMap = GetColumn(input, 1).GroupBy(x => x).ToDictionary(x => x.Key, x=> x.Count());
+
+        var similarityScore = left.Sum(x=> rightMap.TryGetValue(x, out var result) ? x * result : 0);
+
+        return similarityScore;
     }
 
-    private IReadOnlyCollection<int> GetOrderedColumn(string input, int columnIndex)
+    private IReadOnlyCollection<int> GetColumn(string input, int columnIndex)
     {
         var lines = input.Split('\n');
         var numbers = lines.Select(l=> int.Parse(l.Split("   ")[columnIndex]));
-        return numbers.Order().ToArray();
+        return numbers.ToArray();
+    }
+    private IReadOnlyCollection<int> GetOrderedColumn(string input, int columnIndex)
+    {
+        return GetColumn(input, columnIndex).Order().ToArray();
     }
 }
