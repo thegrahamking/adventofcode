@@ -12,23 +12,25 @@ using System.Diagnostics;
 [ProblemName("Ceres Search")]
 class Solution : Solver
 {
-    static readonly char[] Word = "XMAS".ToCharArray();
-    static readonly Vector[] SearchVectors = [new Vector(0, 1), new Vector(1, 1), new Vector(1, 0), new Vector(1, -1), new Vector(0, -1), new Vector(-1, -1), new Vector(-1, 0), new Vector(-1, 1)];
+    // X and Y coordinates are reversed - Need sleep, no time to fix
 
     public object PartOne(string input)
     {
         var wordSearch = ParseInput(input);
+        var word = "XMAS".ToCharArray();
         var wordCount = 0;
+
+        Vector[] searchVectors = [new Vector(0, 1), new Vector(1, 1), new Vector(1, 0), new Vector(1, -1), new Vector(0, -1), new Vector(-1, -1), new Vector(-1, 0), new Vector(-1, 1)];
 
         for (int i = 0; i < wordSearch[0].Length; i++)
         {
             for (int j = 0; j < wordSearch.Length; j++)
             {
                 var start = new Point(i, j);
-                foreach (var vector in SearchVectors)
+                foreach (var vector in searchVectors)
                 {
-                    var potentialWord = BuildPotentialWord(wordSearch, Word.Length, start, vector);
-                    if (potentialWord.SequenceEqual(Word))
+                    var potentialWord = GetWordFromPointOnVector(wordSearch, word.Length, start, vector);
+                    if (potentialWord.SequenceEqual(word))
                     {
                         wordCount++;
                     }
@@ -42,7 +44,36 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var wordSearch = ParseInput(input);
+        var mas = "MAS".ToCharArray();
+        var wordCount = 0;
+
+        for (int i = 0; i < wordSearch.Length; i++)
+        {
+            for (int j = 0; j < wordSearch[0].Length; j++)
+            {
+                var start = new Point(j, i);
+                var topLeftToBottomRight = GetWordFromPointOnVector(wordSearch, mas.Length, start.Travel(new Vector(-1, -1)), new Vector(1, 1));
+                var topRightToBottomLeft = GetWordFromPointOnVector(wordSearch, mas.Length, start.Travel(new Vector(-1, 1)), new Vector(1, -1));
+                
+                // Could have done this with vectors but this works too
+                var bottomRightToTopLeft = topLeftToBottomRight.Reverse().ToArray();
+                var bottomLeftToTopRight = topRightToBottomLeft.Reverse().ToArray();
+
+                if ((topLeftToBottomRight.SequenceEqual(mas) && topRightToBottomLeft.SequenceEqual(mas)) ||
+                    (bottomRightToTopLeft.SequenceEqual(mas) && bottomLeftToTopRight.SequenceEqual(mas)) ||
+                    (topLeftToBottomRight.SequenceEqual(mas) && bottomLeftToTopRight.SequenceEqual(mas)) ||
+                    (bottomRightToTopLeft.SequenceEqual(mas) && topRightToBottomLeft.SequenceEqual(mas)) ||
+                    (bottomRightToTopLeft.SequenceEqual(mas) && bottomLeftToTopRight.SequenceEqual(mas)))
+                {
+                    wordCount++;
+                }
+
+            }
+        }
+
+        return wordCount;
+
     }
 
     private static string[] ParseInput(string input)
@@ -50,7 +81,7 @@ class Solution : Solver
         return input.Trim().Split('\n');
     }
 
-    private static char[] BuildPotentialWord(string[] wordSearch, int searchLength, Point start, Vector vector)
+    private static char[] GetWordFromPointOnVector(string[] wordSearch, int searchLength, Point start, Vector vector)
     {
         var result = new char[searchLength];
         result[0] = GetLetter(wordSearch, start);
