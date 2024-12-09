@@ -31,16 +31,16 @@ class Solution : Solver
                     (isEnabled: true, total: 0L),
                     (accumulator, match) =>
 
-                        (match.Value, accumulator.total, accumulator.isEnabled) switch
+                        (match.Value, accumulator.isEnabled) switch
                         {
                             // Enabler found - Update the accumulator to enable operations (leave total unchanged)
-                            (enabler, _, _) => (true, accumulator.total),
+                            (enabler, _) => (true, accumulator.total),
 
                             // Disabler found - Update the accumulator to disable operations (leave total unchanged)
-                            (disabler, _, _) => (false, accumulator.total),
+                            (disabler, _) => (false, accumulator.total),
 
                             // Operation found - Update actuator total (leave operations enabled)
-                            (_, var total, true) => (true, total + Multiply(match)),
+                            (_, true) => (true, accumulator.total + Multiply(match)),
 
                             // Unknown found - Continue
                             _ => accumulator
