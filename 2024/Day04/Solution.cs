@@ -48,9 +48,10 @@ class Solution : Solver
         var mas = "MAS".ToCharArray();
         var wordCount = 0;
 
-        for (int i = 0; i < wordSearch.Length; i++)
+        // Can start from 1 and exclude last in both axis because cross cannot be centered on outer edge
+        for (int i = 1; i < wordSearch.Length - 1; i++)
         {
-            for (int j = 0; j < wordSearch[0].Length; j++)
+            for (int j = 1; j < wordSearch[0].Length - 1; j++)
             {
                 var start = new Point(j, i);
                 var topLeftToBottomRight = GetWordFromPointOnVector(wordSearch, mas.Length, start.Travel(new Vector(-1, -1)), new Vector(1, 1));
