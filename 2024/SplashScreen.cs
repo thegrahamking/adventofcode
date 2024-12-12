@@ -8,8 +8,8 @@ class SplashScreenImpl : SplashScreen {
 
         var color = Console.ForegroundColor;
         Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  /* 2024 */\n            \n ");
-            Write(0xcc00, false, "          ");
+            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {'year': 2024}\n          ");
+            Write(0xcc00, false, "  \n           ");
             Write(0x888888, false, "          .-----.          .------------------.         \n                  ");
             Write(0xcccccc, false, ".--'");
             Write(0xe3b585, false, "~ ~ ~");
@@ -49,9 +49,9 @@ class SplashScreenImpl : SplashScreen {
             Write(0xcccccc, false, "|   3 ");
             Write(0xffff66, false, "**\n           ");
             Write(0xcccccc, false, "|");
-            Write(0x427322, false, "#");
+            Write(0x488813, false, "#");
             Write(0x5eabb4, false, "..");
-            Write(0x4d8b03, false, "@");
+            Write(0x7fbd39, false, "@");
             Write(0xe3b585, false, "'. ~ ");
             Write(0xcc00, false, "\" ' ");
             Write(0xe3b585, false, "~ ");
@@ -67,9 +67,10 @@ class SplashScreenImpl : SplashScreen {
             Write(0xcc00, false, ".'");
             Write(0xcccccc, false, "|   4 ");
             Write(0xffff66, false, "**\n           ");
-            Write(0x666666, false, "|               |        |          ..          |  ");
+            Write(0x666666, false, "|_.~._@'.. ~ ~ *|        | _| |_    ..\\_\\_ ..'* |  ");
             Write(0xcccccc, false, " 5 ");
-            Write(0x666666, false, "**\n           |               |        |        .'  '.        |  ");
+            Write(0xffff66, false, "*");
+            Write(0x666666, false, "*\n           |               |        |        .'  '.        |  ");
             Write(0xcccccc, false, " 6 ");
             Write(0x666666, false, "**\n           |               |        |        |    |        |  ");
             Write(0xcccccc, false, " 7 ");
@@ -77,18 +78,22 @@ class SplashScreenImpl : SplashScreen {
             Write(0xcccccc, false, " 8 ");
             Write(0x666666, false, "**\n           '---'  |        |        |        |    |        |  ");
             Write(0xcccccc, false, " 9 ");
+            Write(0x666666, false, "**\n                  |        |        |        |    |        |  ");
+            Write(0xcccccc, false, "10 ");
+            Write(0x666666, false, "**\n                  |        |        |        |    |        |  ");
+            Write(0xcccccc, false, "11 ");
+            Write(0x666666, false, "**\n                  |        |        |        |    |        |  ");
+            Write(0xcccccc, false, "12 ");
             Write(0x666666, false, "**\n           ");
             Write(0x333333, false, "       |        |        |        |    |        |  ");
-            Write(0x666666, false, "10\n                                                              11\n                                ");
-            Write(0x666666, false, "                              12\n                                                              13\n  ");
-            Write(0x666666, false, "                                                            14\n                                     ");
-            Write(0x666666, false, "                         15\n                                                              16\n       ");
-            Write(0x666666, false, "                                                       17\n                                          ");
-            Write(0x666666, false, "                    18\n                                                              19\n            ");
-            Write(0x666666, false, "                                                  20\n                                               ");
-            Write(0x666666, false, "               21\n                                                              22\n                 ");
-            Write(0x666666, false, "                                             23\n                                                    ");
-            Write(0x666666, false, "          24\n                                                              25\n           \n");
+            Write(0x666666, false, "13\n                                                              14\n                                ");
+            Write(0x666666, false, "                              15\n                                                              16\n  ");
+            Write(0x666666, false, "                                                            17\n                                     ");
+            Write(0x666666, false, "                         18\n                                                              19\n       ");
+            Write(0x666666, false, "                                                       20\n                                          ");
+            Write(0x666666, false, "                    21\n                                                              22\n            ");
+            Write(0x666666, false, "                                                  23\n                                               ");
+            Write(0x666666, false, "               24\n                                                              25\n           \n");
             
         Console.ForegroundColor = color;
         Console.WriteLine();
