@@ -21,7 +21,11 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var (comparer, updatesToApply) = ParseInput(input);
+        return updatesToApply
+                    .Where(update => !UpdateIsCorrectlyOrdered(update, comparer))
+                    .Select(update => OrderUpdate(update, comparer))
+                    .Sum(GetMiddlePageNumber);
     }
 
     private static (IComparer<string> comparer, string[][] updatesToApply) ParseInput(string input)
@@ -34,7 +38,9 @@ class Solution : Solver
         return (new OrderRulesComparer(pageOrderingRules), updatesToApply);
     }
 
-    private static bool UpdateIsCorrectlyOrdered(string[] update, IComparer<string> comparer) => update.SequenceEqual(update.Order(comparer));
+    private static bool UpdateIsCorrectlyOrdered(string[] update, IComparer<string> comparer) => update.SequenceEqual(OrderUpdate(update, comparer));
+
+    private static string[] OrderUpdate(string[] update, IComparer<string> comparer) => update.Order(comparer).ToArray();
 
     private static int GetMiddlePageNumber(string[] u) => int.Parse(u[u.Length / 2]);
 
