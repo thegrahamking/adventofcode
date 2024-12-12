@@ -40,7 +40,60 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var (map, currentGuardPosition) = ParseInput(input);
+
+        var counter = 0;
+        var initialGuardPosition = currentGuardPosition;
+
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                // Can't use the initial guard position
+                if (x == initialGuardPosition.X && y == initialGuardPosition.Y)
+                {
+                    continue;
+                }
+
+                // No point trying existing blocked paths
+                if (map[x, y] == '#')
+                {
+                    continue;
+                }
+
+                char[,] testMap = (char[,])map.Clone();
+                testMap[x, y] = '#';
+
+                if (PathLoops(testMap, initialGuardPosition))
+                {
+                    counter++;
+                }
+            }
+        }
+
+        return counter;
+    }
+
+    private static bool PathLoops(char[,] map, (int X, int Y) initialGuardPosition)
+    {
+        var currentGuardPosition = initialGuardPosition;
+        var guardStates = new HashSet<(int X, int Y, char position)>();
+
+        while (PositionIsWithinMap(map, currentGuardPosition))
+        {
+            // Console.Clear();
+            // PrintMap(map);
+
+            if (!guardStates.Add((currentGuardPosition.X, currentGuardPosition.Y, map[currentGuardPosition.X, currentGuardPosition.Y])))
+            {
+                // Guard has been in this state (position and direction) before so we must be in a loop
+                return true;
+            }
+
+            (map, currentGuardPosition) = Advance(map, currentGuardPosition);
+        }
+
+        return false;
     }
 
     private static void PrintMap(char[,] map)
