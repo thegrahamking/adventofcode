@@ -16,13 +16,34 @@ class Solution : Solver
         var operations = ParseInput(input);
 
         return operations
-            .Where(o => EquationIsValid(o.TestValue, o.Numbers[0], o.Numbers[1..]))
+            .Where(o => TestEquation(o.TestValue, o.Numbers[0], o.Numbers[1..]))
             .Sum(o => o.TestValue);
+
+        static bool TestEquation(long testValue, long currentTotal, long[] numbers)
+        {
+            return numbers.Length == 0
+                ? currentTotal == testValue
+                : TestEquation(testValue, currentTotal * numbers[0], numbers[1..]) ||
+                    TestEquation(testValue, currentTotal + numbers[0], numbers[1..]);
+        }
     }
 
     public object PartTwo(string input)
     {
-        return 0;
+        var operations = ParseInput(input);
+
+        return operations
+            .Where(o => TestEquation(o.TestValue, o.Numbers[0], o.Numbers[1..]))
+            .Sum(o => o.TestValue);
+
+        static bool TestEquation(long testValue, long currentTotal, long[] numbers)
+        {
+            return numbers.Length == 0
+                ? currentTotal == testValue
+                : TestEquation(testValue, long.Parse($"{currentTotal}{numbers[0]}"), numbers[1..]) ||
+                    TestEquation(testValue, currentTotal * numbers[0], numbers[1..]) ||
+                    TestEquation(testValue, currentTotal + numbers[0], numbers[1..]);
+        }
     }
 
     private static (long TestValue, long[] Numbers)[] ParseInput(string input)
@@ -37,12 +58,5 @@ class Solution : Solver
                  return (testValue, numbers);
              })
             .ToArray();
-    }
-
-    private static bool EquationIsValid(long testValue, long currentTotal, long[] numbers)
-    {
-        return numbers.Length == 0
-            ? currentTotal == testValue
-            : EquationIsValid(testValue, currentTotal * numbers[0], numbers[1..]) || EquationIsValid(testValue, currentTotal + numbers[0], numbers[1..]);
     }
 }
