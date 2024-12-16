@@ -1,4 +1,4 @@
-namespace AdventOfCode.Y2024.Day08;
+﻿namespace AdventOfCode.Y2024.Day08;
 
 using System;
 using System.Collections.Generic;
@@ -11,25 +11,27 @@ using System.Runtime.ExceptionServices;
 using System.Xml.Serialization;
 using System.Reflection.Metadata;
 
+using Coordinate = (int X, int Y);
+using CoordinatePair = ((int X, int Y) First, (int X, int Y) Second);
+
 [ProblemName("Resonant Collinearity")]
 class Solution : Solver
 {
-
     public object PartOne(string input)
     {
         var (xMax, yMax, antennas) = ParseInput(input);
 
         var combinations = antennas.ToDictionary(x => x.Key, x => GetAntennaCombinations(x.Value));
 
-        var antinodeLocations = new HashSet<(int x, int y)>();
+        var antinodeLocations = new HashSet<Coordinate>();
 
-        foreach (((int x, int y) first, (int x, int y) second) pair in combinations.Values.SelectMany(x => x))
+        foreach (CoordinatePair pair in combinations.Values.SelectMany(x => x))
         {
-            var antinode1OffSet = (x: pair.first.x - pair.second.x, y: pair.first.y - pair.second.y);
-            var antinode2OffSet = (x: pair.second.x - pair.first.x, y: pair.second.y - pair.first.y);
+            var antinode1OffSet = (x: pair.First.X - pair.Second.X, y: pair.First.Y - pair.Second.Y);
+            var antinode2OffSet = (x: pair.Second.X - pair.First.X, y: pair.Second.Y - pair.First.Y);
 
-            var antinode1 = (x: pair.first.x + antinode1OffSet.x, y: pair.first.y + antinode1OffSet.y);
-            var antinode2 = (x: pair.second.x + antinode2OffSet.x, y: pair.second.y + antinode2OffSet.y);
+            var antinode1 = (x: pair.First.X + antinode1OffSet.x, y: pair.First.Y + antinode1OffSet.y);
+            var antinode2 = (x: pair.Second.X + antinode2OffSet.x, y: pair.Second.Y + antinode2OffSet.y);
 
             if (IsWithinGrid(antinode1, xMax, yMax))
             {
@@ -50,53 +52,46 @@ class Solution : Solver
         return 0;
     }
 
-    private static bool IsWithinGrid((int x, int y) coordinate, int xMax, int yMax)
+    private static bool IsWithinGrid(Coordinate coordinate, int xMax, int yMax)
     {
-        return coordinate.x >= 0 && coordinate.x < xMax && coordinate.y >= 0 && coordinate.y < yMax;
+        return coordinate.X >= 0 && coordinate.X < xMax && coordinate.Y >= 0 && coordinate.Y < yMax;
     }
 
-    private static ((int x, int y) first, (int x, int y) second)[] GetAntennaCombinations(List<(int x, int y)> antennas)
+    private static (Coordinate first, Coordinate second)[] GetAntennaCombinations(List<Coordinate> antennas)
     {
         var comparer = new UniqueCoordinatePairsComparer();
         return antennas
-            .SelectMany(x => antennas, (first, second) => (first, second))
-            .Where(coordinate => coordinate.Item1 != coordinate.Item2)
-            .Distinct()
+            .SelectMany(x => antennas, (first, second) => new CoordinatePair(first, second))
+            .Where(coordinate => coordinate.First != coordinate.Second)
+            .Distinct(comparer)
             .ToArray();
     }
 
-    private class UniqueCoordinatePairsComparer : EqualityComparer<((int x, int y), (int x, int y))>
+    private class UniqueCoordinatePairsComparer : EqualityComparer<CoordinatePair>
     {
-        public override bool Equals(((int x, int y), (int x, int y)) a, ((int x, int y), (int x, int y)) b)
+        public override bool Equals(CoordinatePair a, CoordinatePair b)
         {
-            return (a.Item1 == b.Item1 && a.Item2 == b.Item2) ||
-                    (a.Item1 == b.Item2 && a.Item2 == b.Item1);
+            return (a.First == b.First && a.Second == b.Second) ||
+                    (a.First == b.Second && a.Second == b.First);
         }
 
-        public override int GetHashCode([DisallowNull] ((int x, int y), (int x, int y)) pair)
+        public override int GetHashCode([DisallowNull] CoordinatePair obj)
         {
             unchecked
             {
-                return pair.Item1.GetHashCode() * pair.Item2.GetHashCode() * 397;
+                return obj.First.GetHashCode() * obj.Second.GetHashCode() * 397;
             }
-        }
-
-        private static int GetHashCode(int x, int y)
-        {
-            // https://stackoverflow.com/questions/22826326/good-hashcode-function-for-2d-coordinates
-            int tmp = y + ((x + 1) / 2);
-            return x + (tmp * tmp);
         }
     }
 
-    private static (int xMax, int yMax, Dictionary<char, List<(int X, int Y)>> antennas) ParseInput(string input)
+    private static (int xMax, int yMax, Dictionary<char, List<Coordinate>> antennas) ParseInput(string input)
     {
         var lines = input.Split('\n').Reverse().ToArray();
 
         var xMax = lines[0].Length;
         var yMax = lines.Length;
 
-        var antennas = new Dictionary<char, List<(int X, int Y)>>();
+        var antennas = new Dictionary<char, List<Coordinate>>();
 
         for (int y = 0; y < yMax; y++)
         {
@@ -107,7 +102,7 @@ class Solution : Solver
                 {
                     if (!antennas.TryGetValue(contents, out var locations))
                     {
-                        locations = new List<(int X, int Y)>();
+                        locations = new List<Coordinate>();
                         antennas.Add(contents, locations);
                     }
 
