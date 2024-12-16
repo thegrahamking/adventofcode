@@ -27,11 +27,11 @@ class Solution : Solver
 
         foreach (CoordinatePair pair in combinations.Values.SelectMany(x => x))
         {
-            var antinode1OffSet = (x: pair.First.X - pair.Second.X, y: pair.First.Y - pair.Second.Y);
-            var antinode2OffSet = (x: pair.Second.X - pair.First.X, y: pair.Second.Y - pair.First.Y);
+            var antinode1OffSet = (X: pair.First.X - pair.Second.X, Y: pair.First.Y - pair.Second.Y);
+            var antinode2OffSet = (X: pair.Second.X - pair.First.X, Y: pair.Second.Y - pair.First.Y);
 
-            var antinode1 = (x: pair.First.X + antinode1OffSet.x, y: pair.First.Y + antinode1OffSet.y);
-            var antinode2 = (x: pair.Second.X + antinode2OffSet.x, y: pair.Second.Y + antinode2OffSet.y);
+            var antinode1 = new Coordinate(pair.First.X + antinode1OffSet.X, pair.First.Y + antinode1OffSet.Y);
+            var antinode2 = new Coordinate(pair.Second.X + antinode2OffSet.X, pair.Second.Y + antinode2OffSet.Y);
 
             if (IsWithinGrid(antinode1, xMax, yMax))
             {
