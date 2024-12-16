@@ -49,7 +49,42 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var (xMax, yMax, antennas) = ParseInput(input);
+
+        var combinations = antennas.ToDictionary(x => x.Key, x => GetAntennaCombinations(x.Value));
+
+        var antinodeLocations = new HashSet<Coordinate>();
+
+        foreach (CoordinatePair pair in combinations.Values.SelectMany(x => x))
+        {
+            var antinode1OffSet = (x: pair.First.X - pair.Second.X, y: pair.First.Y - pair.Second.Y);
+            var antinode2OffSet = (x: pair.Second.X - pair.First.X, y: pair.Second.Y - pair.First.Y);
+
+            foreach (var antinode in ProjectAntinodes(pair.First, antinode1OffSet, xMax, yMax).Concat(ProjectAntinodes(pair.Second, antinode2OffSet, xMax, yMax)))
+            {
+                antinodeLocations.Add(antinode);
+            }
+        }
+
+        return antinodeLocations.Count;
+    }
+
+    private static IReadOnlyCollection<Coordinate> ProjectAntinodes(Coordinate initial, (int x, int y) offset, int xMax, int yMax)
+    {
+        var isWithinGrid = true;
+        var antinode = initial;
+        var antinodes = new List<Coordinate>();
+        while(isWithinGrid)
+        {
+            isWithinGrid = IsWithinGrid(antinode, xMax, yMax);
+            if (isWithinGrid)
+            {
+                antinodes.Add(antinode);
+            }
+            antinode = new Coordinate(antinode.X + offset.x, antinode.Y + offset.y);
+        }
+
+        return antinodes;
     }
 
     private static bool IsWithinGrid(Coordinate coordinate, int xMax, int yMax)
